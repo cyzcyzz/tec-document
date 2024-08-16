@@ -1,0 +1,8 @@
+{
+  "promptDelete": false,
+  "attachmentFolderPath": "./attachments",
+  "newFileLocation": "current",
+  "showInlineTitle": false,
+  "showRibbon": true,
+  "alwaysUpdateLinks": true
+}

@@ -1,0 +1,201 @@
+{
+  "main": {
+    "id": "ff2bfe5998af1d4b",
+    "type": "split",
+    "children": [
+      {
+        "id": "035577faff2fc5b1",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b0fcbd19d12682a5",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "linux/linux-one.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "11a1f91228787f32",
+    "type": "split",
+    "children": [
+      {
+        "id": "a593d261d11aff37",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "f0103856f9fbbb03",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "f4d6eab7bc69b0f7",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "676a94ac7fb848fd",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 387.5
+  },
+  "right": {
+    "id": "3bd6078436d88deb",
+    "type": "split",
+    "children": [
+      {
+        "id": "a18e7e476c22af15",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b1d08f70fe6a175d",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "linux/linux-one.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "e7af09cec380b2e1",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "linux/linux-one.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "1722577f52b6c0ae",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "4485a576ad3756a4",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "linux/linux-one.md"
+              }
+            }
+          }
+        ],
+        "currentTab": 3
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false,
+      "obsidian-excalidraw-plugin:新建绘图文件": false
+    }
+  },
+  "active": "b0fcbd19d12682a5",
+  "lastOpenFiles": [
+    "linux/linux-three.md",
+    "linux/linux-two.md",
+    "linux/linux-one.md",
+    "linux/linux-4.md",
+    "linux/TCP链接.md",
+    "tec-share-magedu/rocky虚拟机使用宿主机网络TEC上网.md",
+    "cloud-native/k8s-vloume.md",
+    "cloud-native/k8s-limit.md",
+    "cloud-native/docker_cgroup_image.md",
+    "cloud-native/namespace.md",
+    "cloud-native/k8s-cni.md",
+    "cloud-native/k8s-network.md",
+    "linux/disk-monitor.md",
+    "master",
+    "tec-share-magedu/buildkit构建镜像.md",
+    "tec-share-magedu/Dockerfile常见指令.md",
+    "tec-share-magedu/Helm使用指南.md",
+    "tec-share-magedu/nexus部署安装.md",
+    "tec-share-magedu/kubeadm部署k8s.md",
+    "docker-pull/img/20240727112934.png",
+    "docker-pull/img/20240727113210.png",
+    "docker-pull/img/20240727112902.png",
+    "docker-pull/img/20240727112845.png",
+    "docker-pull/img/20240727112634.png",
+    "docker-pull/img/20240727112528.png",
+    "docker-pull/img/20240727112458.png",
+    "docker-pull/img/20240727112043.png",
+    "others/Linux101.md",
+    "others/练习题目.md",
+    "小技巧/小技巧.md",
+    "未命名",
+    "others/Linux小技巧.md",
+    "week-share/Excalidraw/Drawing 2024-07-05 16.41.43.excalidraw.md",
+    "week-share/buildkit构建镜像.md",
+    "文本",
+    "技术分享/Excalidraw/Drawing 2024-07-05 16.41.43.excalidraw.md",
+    "技术分享/photo",
+    "tec-share-magedu/VM部署.md",
+    "技术分享/Excalidraw",
+    "tec-share-magedu",
+    "小技巧",
+    "week-share/Excalidraw",
+    "week-share",
+    "docker-pull/img",
+    "exdra/测试.canvas",
+    "未命名.canvas",
+    "Pasted image 20240123142104.png",
+    "未命名 1.canvas"
+  ]
+}
