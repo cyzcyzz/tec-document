@@ -2,9 +2,9 @@
 date: 2024-08-12T17:44:36+08:00
 tags:
   - etcd
-title: 安装ETCD高可用集群
+title: 二进制安装ETCD高可用集群
 slug: 17:44
-share: false
+share: true
 keywords: 
 cover.image: 
 author: 程元召
@@ -16,11 +16,11 @@ categories:
 
 
 
-| hostname          | 名称     | IP地址           |
-| ----------------- | ------ | -------------- |
-| etcd01.oyfacc.com | etcd01 | 192.168.158.13 |
-| etcd02.oyfacc.com | etcd02 |                |
-| etcd03.oyfacc.com | etcd03 |                |
+| hostname          | 名称     | IP地址 |
+| ----------------- | ------ | ---- |
+| etcd01.oyfacc.com | etcd01 |      |
+| etcd02.oyfacc.com | etcd02 |      |
+| etcd03.oyfacc.com | etcd03 |      |
 ## 基础环境准备
 
 ```shell
@@ -29,8 +29,8 @@ ssh-keygen
 ssh-copy-id root@xxx
 
 # 所有机器创建文件夹
-mkdir /etc/etcd 证书存放目录
-mkdir /var/lib/etcd 数据和wal存放目录
+mkdir -pv /etc/etcd 证书存放目录
+mkdir -pv /var/lib/etcd 数据和wal存放目录
       /usr/bin/ 二进制存放
 ```
 
@@ -128,9 +128,9 @@ cat etcd-csr.json
 {
   "CN": "etcd",
   "hosts": [
+    "10.206.100.14",
+    "10.206.100.4",
     "10.206.100.12",
-    "10.206.100.15",
-    "10.206.100.16",
     "127.0.0.1"
   ],
   "key": {
@@ -150,7 +150,6 @@ cat etcd-csr.json
 ```
 
 ```shell
-cfssl gencert -initca ca-csr.json | cfssljson -bare ca
 
 cfssl gencert \
         -ca=ca.pem \
@@ -183,19 +182,19 @@ Documentation=https://github.com/coreos
 Type=notify
 WorkingDirectory=/var/lib/etcd
 ExecStart=/usr/bin/etcd \
-  --name=etcd-10.206.100.16 \
+  --name=etcd-10.206.100.12 \
   --cert-file=/etc/etcd/ssl/etcd.pem \
   --key-file=/etc/etcd/ssl/etcd-key.pem \
   --peer-cert-file=/etc/etcd/ssl/etcd.pem \
   --peer-key-file=/etc/etcd/ssl/etcd-key.pem \
   --trusted-ca-file=/etc/etcd/ssl/ca.pem \
   --peer-trusted-ca-file=/etc/etcd/ssl/ca.pem \
-  --initial-advertise-peer-urls=https://10.206.100.16:2380 \
-  --listen-peer-urls=https://10.206.100.16:2380 \
-  --listen-client-urls=https://10.206.100.16:2379,http://127.0.0.1:2379 \
-  --advertise-client-urls=https://10.206.100.16:2379 \
+  --initial-advertise-peer-urls=https://10.206.100.12:2380 \
+  --listen-peer-urls=https://10.206.100.12:2380 \
+  --listen-client-urls=https://10.206.100.12:2379,http://127.0.0.1:2379 \
+  --advertise-client-urls=https://10.206.100.12:2379 \
   --initial-cluster-token=etcd-cluster-0 \
-  --initial-cluster=etcd-10.206.100.12=https://10.206.100.12:2380,etcd-10.206.100.15=https://10.206.100.15:2380,etcd-10.206.100.16=https://10.206.100.16:2380 \
+  --initial-cluster=etcd-10.206.100.14=https://10.206.100.14:2380,etcd-10.206.100.4=https://10.206.100.4:2380,etcd-10.206.100.12=https://10.206.100.12:2380 \
   --initial-cluster-state=new \
   --data-dir=/var/lib/etcd \
   --wal-dir=/var/lib/etcd \

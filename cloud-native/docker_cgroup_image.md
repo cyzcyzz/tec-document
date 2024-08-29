@@ -3,27 +3,28 @@ date: 2020-07-05T22:30:20+08:00
 tags:
   - docker
   - 容器
-title: Namespace
+title: Docker操作和资源隔离
 share: true
 keywords: 
 description: ""
 lang: cn
 cover.image: ""
 author: 程元召
-dir: posts
+dir: post
 categories:
   - 云原生
   - 容器
 draft: false
 ---
+## 基本操作
 容器启动之前，镜像必须先存在本地，如果本地不存在镜像，回去仓库获取镜像，并且pull的本地
-## 获取镜像
+### 获取镜像
 获取镜像的命令是`docker pull`命令，命令格式如下：
 ```linux
 docker pull [选项] [docker registry 地址/仓库名:标签]
 ```
 具体的参数选项可以通过`docker pull --help`查看到。一般情况下获取镜像的命令是`docker pull 用户名/仓库名：tag`，如果没写用户名，则代表是官方的镜像库，如：`docker pull centos:7.4`,就是获取centos的7.4版本的镜像。上面的命令没有给出地址，所以默认从[docker hub](https://hub.docker.com/)获取。如果不写版本，则拉取标签为latest的镜像。
-## 运行容器
+### 运行容器
 本地存在镜像以后，我们便可以尝试去运行镜像了，运行容器使用`docker run`命令，格式如下:
 ```linux
 $ docker run -it --rm \
@@ -34,7 +35,7 @@ $ docker run -it --rm \
     bash 容器启动后运行的命令
 ```
 可以看到一个和正常的系统一样的终端，就是我们运行起来的容器了。
-## 列出镜像
+### 列出镜像
 一台安装有docker的机器上，使用`docker image ls`命令可查看全部已存在镜像，如下所示：
 ```linux
 $ docker image ls
@@ -51,7 +52,7 @@ REPOSITORY          TAG                 IMAGE ID            CREATED             
 <none>              <none>              00285df0df87        5 days ago          342 MB
 ```
 一般来说这类镜像已经失去了价值，除了占空间已经无用，可以删除掉，使用`docker image prune`删除。
-## 删除镜像
+### 删除镜像
 删除镜像使用`docker image rm`命令，一般删除的时候使用镜像ID来删除，docker image ls列出的IMAGE ID是这个镜像的短ID，`docker image ls --digests`列出的是镜像的长ID，删除镜像会产生两种类型的信息 untagged和deleted一种是标记取消，一种是镜像层删除，当镜像层不被其他的镜像标记或者依赖的时候，就会在执行删除操作的时候被删除，下面是一些演示：
 ```linux
 $ docker image ls
@@ -92,7 +93,7 @@ Deleted: sha256:97ca462ad9eeae25941546209454496e1d66749d53dfa2ee32bf1faabd239d38
 镜像的基本操作就介绍到这里了，更详细的用法，请参考官方文档。
 
 
-### 隔离简介
+## 资源隔离
 进程隔离后，本身会看不到其他的进程，此时会发生一个问题，独占资源，也就是说，我这个进程会把全部的资源全部跑满，其他的进程抢夺不到资源，这时候我们通常需要对隔离的进程进行一些资源的限制，这就是Linux 下的cgroups技术。
 
 cgroups是control groups的缩写，是内核提供的可以限制和隔离进程组所使用的资源的机制。
@@ -134,7 +135,7 @@ cgroups提供了虚拟文件系统作为用户接口，要是用系统，必须�
 
 Docker引爆了虚拟化领域对容器技术的关注，成为了现在最热门的技术之一。这边文章是对虚拟化技术的基础，名称空间进行总结。
 
-### 6大名称空间
+#### 6大名称空间
 
 在我的理解中，容器技术就像是一个正方体的盒子，有6个面组成，组成一个封闭的空间，这个6个面分别代表了内核系统调用的6个参数，也就是我们通常所说的6大名称空间。
 
@@ -147,7 +148,7 @@ Docker引爆了虚拟化领域对容器技术的关注，成为了现在最热�
 
 实际上上面的6大名称空间实在内核3.8版本以后才开始成熟的。所以最好升级内核版本，这样才稳定。
 
-### 内核系统调用
+#### 内核系统调用
 
 创建一个新的进程，大家都熟悉是使用系统调用`clone（）`，也是docker使用的方法。
 

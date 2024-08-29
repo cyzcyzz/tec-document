@@ -7,10 +7,7 @@
 # 镜像构建技术
 
 docker 大火时，大部分构建还是使用的docker技术，整体的构建流程如下
-![[Drawing 2024-07-05 16.41.43.excalidraw|200]]
-
 在k8s1.24版本之后，已经全面抛弃docker，修改为containerd技术为容器运行环境。对于contaninerd来说，仅具备镜像删除，拉取等能力，不具备构建镜像的能力，所以需要配合buildkitd构建
-
 另外还有一个比较火的构建工具就是kaniko，由谷歌开源。CI/CD流水线也很常用。不需要root用户就可以构建。
 
 # 安装docker

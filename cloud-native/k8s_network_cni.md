@@ -1,11 +1,12 @@
 ---
-title: K8s Network
+title: K8S网络和CNI
 date: 2021-11-08T18:32:39+08:00
 description: ""
-draft: true
-tags: []
+tags: 
 categories:
   - 容器
+dir: post
+share: true
 ---
 
 Kubernetets社区对网络实现方案开放了CNI标准，在我们部署K8S的时候，其中有一个步骤是安装CNI包，这里就是会把CNI插件所需要的基础组建的二进制文件给安装到`/opt/cni/bin`，包含如下组建：

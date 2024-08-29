@@ -1,7 +1,8 @@
 ---
-date: 2024-08-08T18:29:18+08:00
-tags: 
-title: K8S基本概念
+date: 2020-07-23T11:20:41+08:00
+tags:
+  - volume
+title: K8S卷和资源限制
 slug: 18:29
 share: true
 keywords: 
@@ -12,6 +13,7 @@ author: 程元召
 dir: post
 categories:
   - 云原生
+  - 容器
 ---
 ## node
 
@@ -257,3 +259,245 @@ Events:  <none>
 3. 控制器的工作机制
 4. kubelet运行机制
 5. 一个pod的完整运行流程总结
+
+
+# 基本介绍
+
+- 场景一：当我们用K8S创建了一个pod的时候，容器顶部附加了一个可写层用于程序运行时的数据读写，但在容器结束运行的时候，这个可写层也会随之消失，数据也会消失不见，数据无持久化。
+- 场景二：每个pod都有自己的文件系统，当本次pod结束后，后创建的pod不能有效识别到前一个pod遗留的数据，数据不共享问题。
+
+K8S通过定义存储卷来解决上述的问题。存储卷本身不是顶级资源，像pod， service那样，而是被定义为pod的一个组成部分，因为不是独立的K8S对象，不能独立的创建和删除，而且pod的所有容器均可共享使用这个卷。
+
+下面一个简单的应用实例，第一个容器有htdocs目录和logs目录，存放html和日志文件，第二个容器运行了一个代理来创建html，第三个容器来收集日志
+
+![volume-1](http://cdn.oyfacc.cn/k8s/vloume-1.png)
+
+增加共享卷以后
+
+![volume-2](http://cdn.oyfacc.cn/k8s/volume-2.png)
+
+webserver写入日志，日志收集器来收集日志，两个容器内的文件系统的logs文件夹应该挂载同一个卷，htdocs和html文件夹，一个生成文件，一个读取文件，也应该使用同一个共享卷。
+
+### 卷类型
+
+K8S中有多种卷的类型，下面的列表可以参考：
+
+| emptDir                                      | 存储临时数据的简单空目录               |
+| -------------------------------------------- | -------------------------------------- |
+| hostPath～                                   | 用于将目录从work                       |
+| emptDir～                                    | 存储临时数据的简单空目录               |
+| gitRepo                                      | 检出Git仓库内容来初始化                |
+| nfs                                          | 挂载pod中的NFS共享卷                   |
+| 谷歌高效存储卷 亚马逊弹性块存储 微软磁盘卷～ | 公有云存储                             |
+| cinder cephfs glusterfs～                    | 其他网络类型的存储                     |
+| configmap secret～                           | K8S部分资源和集群信息公开给pod的特殊卷 |
+| PVC～                                        | 预置或者动态配置的持久存储类型         |
+
+上面有波浪线的是使用类型比较多的卷，一个容器可以挂在多个不通类型的卷到不通的目录上。
+
+### 使用示例
+
+emptDir
+
+```shell
+apiVersion: v1
+kind: Pod
+metadata::
+  name: fortune
+spec:
+  containers;
+  - images; luksa/fortune
+    name: html-gen
+    volumeMounts:
+    - name: html # 挂载的卷的名称
+      mountPath: /var/htdocs # 这里指明容器内的挂在位置
+      .......
+   volumes:
+   - name: html   # 这里定义了一个卷
+     emptyDir: {}  
+```
+
+hostPath
+
+这种类型属于比较常用的，我们生产线上都是挂载hostpath进去，写日志，ds filebeat去收集本机的日志到某一个日志机上
+
+```shell
+ volumeMounts:
+ - mountPath: /home/logs # 挂载位置
+   name: hostpath # 卷名称
+      ....
+      volumes:
+        - name: hostpath #卷名称
+          hostPath:
+            path: /www-volume/logs # 主机路径
+```
+
+## PV&&PVC
+
+之前的两种类型都需要pod的开发人员了解集群中的真实网络存储的基础设施，这对专业开发人员并不友好，理想的状况是，开发人员不需要知道这些底层设施，当我需要时，申请就可以了。 这就是pv和pvc的作用。
+
+![pv](http://cdn.oyfacc.cn/2020-05-23-PVandPVC.png)
+
+```shell
+# 定义持久卷
+apiVersion: v1
+kind: persistentVolume
+metadata:
+  name: mongodb-pv
+spec:
+  capacity:
+    storage: 1Gi  # 大小
+  accessModes: # 可以被单个客户端挂载
+  - ReadWriteOnce
+  - ReadOnlyMany
+  persistentVolumeReclimPolicy: Retain # 声明被释放后，pv将会保留
+  gcePersistentDisk:
+    pdName: mongodb
+    fstype: ext4
+```
+
+持久卷不属于任何名称空间，是集群层面的资源，持久卷声明是属于某一个名称空间的资源，不能跨名称空间调用
+
+```shell
+# pvc
+apiVersion: v1
+kind: pVC #这里应该写全称
+metadata: 
+  name: monfodb-pvc
+spec:
+  resource:
+    requests:
+      storage: 1Gi
+    accessModes:
+    - ReadWriteOnce
+    storageClassName: ""
+    
+    
+...
+volumes:
+- name: mongodb-data
+  persistentVolumeClaim:
+    claimName: monfodb-pvc
+```
+
+删除持久卷：remian模式下需要手动释放
+
+回收策略配置： recycle 和 delete将会自动释放持久卷
+
+## storageclass
+
+使用pv和pvc可以屏蔽底层的基础设施，但是仍但需要一个集群管理员来创建pv，为了解决这个问题，可以通过动态配置持久卷来自动自行次任务。
+
+创建storageclass需要一个中间程序来连接我们的存储，无论是网络存储，云存储还是其他的存储。
+
+```shell
+apiVersions: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: fast
+procisioner: kubenet. #这里是插件
+parameters:
+  type: pd
+   # 传给插件的参数
+  
+  
+ 。。。
+ pvc声明
+ spec:
+ storageClass:fast
+...
+```
+
+
+
+
+k8s集群中，可以对两种资源进行限制，一是内存，二是cpu，使用Linux cGroups进行限制
+
+### cpu限制
+
+在Linux系统中，CPU的限制相比较内存的限制来说，更复杂一些。但是本身都可以通过cgroups来控制的，下面是一个K8S中的资源限制示例：
+
+```yaml
+resources:
+  requests:
+    memory: 50Mi
+    cpu: 50m
+  limits:
+    memory: 100Mi
+    cpu: 100m
+```
+
+单位后缀`m`表示千分之一核，也就是说，在K8S中，一个cpu核心被量化为1000m。上面的示例requests需要50m，也就是百分之五的cpu，要申请一个cpu的全部核心，可以使用1000m，或者1来表示。
+
+这里调用docker来创建cgroups的时候，会有一些差异
+
+Linux系统和docker都是按照1024的时间片值来计算的，这里和K8S有24的差值。我们称之为shares
+
+shares用来设置CPU的相对值，如：a的shares值为1024，b的为512，则a的相对值为1024/1024+512 约为66%。shares有两个特点：
+
+- a不忙，则b可以超过他的限制，a如果忙，则不能超过66的使用值
+- 当有一个新的c 1024shares加入时，这个值重新计算。1024/1024+1024+512=40%，所以说这个值随着cgroups数量而改变的。
+
+上面资源限制有两个字段，一个是requests，一个是limits。requests值，对应的就是我们上文介绍的shares值来计算的。limits又是怎么计算的呢？
+
+其实他和requests使用的是不同的子系统来控制的。为什么会有单独的子系统呢。通过上文的介绍，你可能已经发现了，当一个进程没有设置shares的时候，他可以自由地使用cpu资源，而且shares子系统没法精准的控制使用的cpu，只能相对来控制。谷歌团队发现了这个问题，并且增加了一个子系统来控制：cpu带宽控制组。他定义了周期和配额两个属性。周期为1/10秒，100000微秒。配额为周期长度内可以使用的cpu时间数。两个配合起来可以精准的控制cpu的使用时长。周期值和配额均可以配置。
+
+下面是几个例子：
+
+```shell
+# 1.限制只能使用1个CPU（每250ms能使用250ms的CPU时间）
+$ echo 250000 > cpu.cfs_quota_us /* quota = 250ms */
+$ echo 250000 > cpu.cfs_period_us /* period = 250ms */
+
+# 2.限制使用2个CPU（内核）（每500ms能使用1000ms的CPU时间，即使用两个内核）
+$ echo 1000000 > cpu.cfs_quota_us /* quota = 1000ms */
+$ echo 500000 > cpu.cfs_period_us /* period = 500ms */
+
+# 3.限制使用1个CPU的20%（每50ms能使用10ms的CPU时间，即使用一个CPU核心的20%）
+$ echo 10000 > cpu.cfs_quota_us /* quota = 10ms */
+$ echo 50000 > cpu.cfs_period_us /* period = 50ms */
+```
+
+上面例子中的100m,换算成这里就是10000/100000，默认的周期是100000，分别对应cfs_period_us=100000, cfs_quota_us=10000。
+
+### 内存限制
+
+内存限制相对于cpu就没有那么的复杂了。他直接把你设置的值映射到cgroups的内存控制子系统上。内存限制如上文的示例，requests代表你要申请的最少内存，也就是说，节点必须有这些内存可以申请，我可以超过这个内存，也可以少于这些内存，但节点一定要有。limits代表，我使用的内存上限，一旦超过，容器就要被oom了，所以建议两个设置合理的值。
+
+### 默认限制
+
+LimitRange 是用来设置 namespace 中 Pod 的默认的资源 request 和 limit 值，以及大小范围
+
+```yaml
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: mem-limit-range
+  namespace: example
+spec:
+  limits:
+  - default:  # default limit
+      memory: 512Mi
+      cpu: 2
+    defaultRequest:  # default request
+      memory: 256Mi
+      cpu: 0.5
+    max:  # max limit
+      memory: 800Mi
+      cpu: 3
+    min:  # min request
+      memory: 100Mi
+      cpu: 0.3
+    maxLimitRequestRatio:  # max value for limit / request
+      memory: 2
+      cpu: 2
+    type: Container # limit type, support: Container / Pod / PersistentVolumeClaim
+```
+
+limitRange支持的参数如下：
+
+- default 代表默认的limit
+- defaultRequest 代表默认的request
+- max 代表limit的最大值
+- min 代表request的最小值
+- maxLimitRequestRatio 代表 limit / request的最大值。由于节点是根据pod request 调度资源，可以做到节点超卖，maxLimitRequestRatio 代表pod最大超卖比例。

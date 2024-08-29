@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "035577faff2fc5b1",
+        "id": "0a975c7b7665af58",
         "type": "tabs",
         "children": [
           {
-            "id": "b0fcbd19d12682a5",
+            "id": "8080041857ab0969",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "linux/linux-one.md",
+                "file": "cloud-native/install_etcd_via_binarie.md",
                 "mode": "source",
                 "source": false
               }
@@ -69,7 +69,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 387.5
+    "width": 270.5
   },
   "right": {
     "id": "3bd6078436d88deb",
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "linux/linux-one.md",
+                "file": "cloud-native/install_etcd_via_binarie.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "linux/linux-one.md",
+                "file": "cloud-native/install_etcd_via_binarie.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "linux/linux-one.md"
+                "file": "cloud-native/install_etcd_via_binarie.md"
               }
             }
           }
@@ -134,37 +134,43 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
       "switcher:打开快速切换": false,
       "graph:查看关系图谱": false,
-      "canvas:新建白板": false,
       "templates:插入模板": false,
       "command-palette:打开命令面板": false,
       "obsidian-excalidraw-plugin:新建绘图文件": false
     }
   },
-  "active": "b0fcbd19d12682a5",
+  "active": "8080041857ab0969",
   "lastOpenFiles": [
+    "cloud-native/docker_cgroup_image.md",
+    "cloud-native/k8s_network_cni.md",
+    "cloud-native/kubernetes_base_volume_limit.md",
+    "programing-language/metaclass.md",
+    "programing-language/goroutine.md",
+    "cloud-native/prometheus-local-storage.md",
+    "cloud-native/k8s-limit.md",
+    "cloud-native/k8s-vloume.md",
+    "template/hugo.md",
+    "cloud-native/docker_install.md",
+    "cloud-native/install_etcd_via_binarie.md",
+    "tec-share-magedu/Dockerfile常见指令.md",
+    "tec-share-magedu/buildkit构建镜像.md",
+    "Excalidraw/Drawing 2024-08-17 20.20.02.excalidraw.md",
+    "linux/linux-one.md",
     "linux/linux-three.md",
     "linux/linux-two.md",
-    "linux/linux-one.md",
     "linux/linux-4.md",
     "linux/TCP链接.md",
     "tec-share-magedu/rocky虚拟机使用宿主机网络TEC上网.md",
-    "cloud-native/k8s-vloume.md",
-    "cloud-native/k8s-limit.md",
-    "cloud-native/docker_cgroup_image.md",
     "cloud-native/namespace.md",
-    "cloud-native/k8s-cni.md",
     "cloud-native/k8s-network.md",
     "linux/disk-monitor.md",
     "master",
-    "tec-share-magedu/buildkit构建镜像.md",
-    "tec-share-magedu/Dockerfile常见指令.md",
     "tec-share-magedu/Helm使用指南.md",
     "tec-share-magedu/nexus部署安装.md",
     "tec-share-magedu/kubeadm部署k8s.md",
@@ -176,17 +182,9 @@
     "docker-pull/img/20240727112528.png",
     "docker-pull/img/20240727112458.png",
     "docker-pull/img/20240727112043.png",
-    "others/Linux101.md",
-    "others/练习题目.md",
-    "小技巧/小技巧.md",
     "未命名",
-    "others/Linux小技巧.md",
-    "week-share/Excalidraw/Drawing 2024-07-05 16.41.43.excalidraw.md",
-    "week-share/buildkit构建镜像.md",
     "文本",
-    "技术分享/Excalidraw/Drawing 2024-07-05 16.41.43.excalidraw.md",
     "技术分享/photo",
-    "tec-share-magedu/VM部署.md",
     "技术分享/Excalidraw",
     "tec-share-magedu",
     "小技巧",
